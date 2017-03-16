@@ -20,7 +20,8 @@ public class Settings {
 
     // Configuració Scrollable
     public static final int ASTEROID_SPEED = -150;
-    public static final int ASTEROID_GAP = 75;
+    //La distancia entre asteroides!!! Por defecto 75
+    public static final int ASTEROID_GAP = 35;
     public static final int BG_SPEED = -100;
 
 

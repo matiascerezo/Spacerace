@@ -34,7 +34,7 @@ public class ScrollHandler extends Group {
         r = new Random();
 
         // Comencem amb 3 asteroids
-        numAsteroids = 3;
+        numAsteroids = 5;
 
         // Creem l'ArrayList
         asteroids = new ArrayList<Asteroid>();
@@ -109,6 +109,10 @@ public class ScrollHandler extends Group {
                 return true;
             }
         }
+        return false;
+    }
+
+    public boolean collidesBala() {
         return false;
     }
 

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import cat.xtec.ioc.helpers.AssetManager;
 import cat.xtec.ioc.helpers.InputHandler;
 import cat.xtec.ioc.objects.Asteroid;
+import cat.xtec.ioc.objects.Bullet;
 import cat.xtec.ioc.objects.ScrollHandler;
 import cat.xtec.ioc.objects.Spacecraft;
 import cat.xtec.ioc.utils.Settings;
@@ -30,6 +31,7 @@ public class GameScreen implements Screen {
     // Objectes necessaris
     private Stage stage;
     private Spacecraft spacecraft;
+    private Bullet bullet;
     private ScrollHandler scrollHandler;
 
     // Encarregats de dibuixar elements per pantalla
@@ -44,6 +46,7 @@ public class GameScreen implements Screen {
     private GlyphLayout textFacil;
     private GlyphLayout textMig;
     private GlyphLayout textDificil;
+    private GlyphLayout textPuntuacio;
     //private GlyphLayout textPuntuacio;
     int recordActual = 0;
 
@@ -64,12 +67,13 @@ public class GameScreen implements Screen {
         batch = stage.getBatch();
 
         // Creem la nau i la resta d'objectes
-        spacecraft = new Spacecraft(Settings.SPACECRAFT_STARTX, Settings.SPACECRAFT_STARTY, Settings.SPACECRAFT_WIDTH, Settings.SPACECRAFT_HEIGHT);
+        spacecraft = new Spacecraft(Settings.SPACECRAFT_STARTX, Settings.SPACECRAFT_STARTY, Settings.SPACECRAFT_WIDTH, Settings.SPACECRAFT_HEIGHT, stage);
         scrollHandler = new ScrollHandler();
 
         // Afegim els actors a l'stage
         stage.addActor(scrollHandler);
         stage.addActor(spacecraft);
+        //stage.addActor(bullet);
         // Donem nom a l'Actor
         spacecraft.setName("spacecraft");
 
@@ -78,7 +82,8 @@ public class GameScreen implements Screen {
         textFacil = new GlyphLayout();
         textMig = new GlyphLayout();
         textDificil = new GlyphLayout();
-        textLayout.setText(AssetManager.font, "Estas\n preparat?");
+        textPuntuacio = new GlyphLayout();
+        //textLayout.setText(AssetManager.font, "Estas\n preparat?");
 
         currentState = GameState.READY;
 
@@ -186,9 +191,16 @@ public class GameScreen implements Screen {
 
     private void updateRunning(float delta) {
         stage.act(delta);
+        batch.begin();
         boolean colisio = false;
-
-        //textPuntuacio.setText(AssetManager.font, "%");
+        if (!colisio) {
+            textPuntuacio.setText(AssetManager.font, "Puntuacio: " + scrollHandler.getPuntuacio());
+            AssetManager.font.getData().setScale(0.3f);
+            AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 90), 2);
+            /*if (scrollHandler.getPuntuacio()>100){
+                AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 110), 2);
+            }*/
+        }
 
         if (scrollHandler.collides(spacecraft)) {
             // Si hi ha hagut col·lisió: Reproduïm l'explosió i posem l'estat a GameOver
@@ -198,29 +210,21 @@ public class GameScreen implements Screen {
             currentState = GameState.GAMEOVER;
             colisio = true;
         }
+
+        //if (scrollHandler.co)
         if (recordActual < scrollHandler.getPuntuacio()) {
             recordActual = scrollHandler.getPuntuacio();
-            thread = new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                        AssetManager.recordSound.dispose();
-
-                    } catch (InterruptedException ex) {
-                    }
-                }
-            };
-            thread.start();
-            AssetManager.recordSound.play();
+            //AssetManager.recordSound.play();
         }
         if (colisio) {
+            AssetManager.font.getData().setScale(0.4f);
             if (scrollHandler.getPuntuacio() > 0) {
-                textLayout.setText(AssetManager.font, "Record: " + recordActual + "\n\nPuntuacio: " + scrollHandler.getPuntuacio() + " punts\n");
+                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + scrollHandler.getPuntuacio() + " punts\n");
             } else {
                 textLayout.setText(AssetManager.font, "Record: " + recordActual + "\n\nPuntuacio: \n" + 0 + " punts JAJA");
             }
         }
+        batch.end();
     }
 
     private void updateGameOver(float delta) {
@@ -245,6 +249,9 @@ public class GameScreen implements Screen {
 
         // Posem l'estat a 'Ready'
         currentState = GameState.READY;
+
+        //Tornem a possar la mida normal
+        AssetManager.font.getData().setScale(0.4f);
 
         // Afegim la nau a l'stage
         stage.addActor(spacecraft);

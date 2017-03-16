@@ -25,6 +25,8 @@ public class MenuScreen implements Screen {
 
     private Label.LabelStyle textStyle;
     private Label textLbl;
+    private int dificil, facil, mig;
+    private int velocitatEntreAsteroids;
 
     public MenuScreen(SpaceRace game) {
 
@@ -47,7 +49,7 @@ public class MenuScreen implements Screen {
 
         // Creem l'estil de l'etiqueta i l'etiqueta
         textStyle = new Label.LabelStyle(AssetManager.font, null);
-        textLbl = new Label("SpaceRace", textStyle);
+        textLbl = new Label("Dificultat", textStyle);
 
         // Creem el contenidor necessari per aplicar-li les accions
         Container container = new Container(textLbl);
@@ -81,14 +83,14 @@ public class MenuScreen implements Screen {
         stage.act(delta);
 
         // Si es fa clic en la pantalla, canviem la pantalla
-
-
         if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
             dispose();
         }
+        //if (Gdx.input.)
 
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -113,6 +115,39 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public int getDificil() {
+        return dificil;
+    }
+
+    public void setDificil(int dificil) {
+        this.dificil = dificil;
+    }
+
+    public int getFacil() {
+        return facil;
+    }
+
+    public void setFacil(int facil) {
+        this.facil = facil;
+    }
+
+    public int getMig() {
+        return mig;
+    }
+
+    public void setMig(int mig) {
+        this.mig = mig;
+        setVelocitatEntreAsteroids(30);
+    }
+
+    public int getVelocitatEntreAsteroids() {
+        return velocitatEntreAsteroids;
+    }
+
+    public void setVelocitatEntreAsteroids(int velocitatEntreAsteroids) {
+        this.velocitatEntreAsteroids = velocitatEntreAsteroids;
     }
 }
 /*private Image playBtn, creditsBtn, optionsBtn;

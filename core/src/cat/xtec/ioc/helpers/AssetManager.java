@@ -29,7 +29,7 @@ public class AssetManager {
     //public static Animation bulletAnim;
 
     // Sons
-    public static Sound explosionSound, recordSound;
+    public static Sound explosionSound, recordSound, shootSound;
     public static Music music;
 
 
@@ -72,8 +72,8 @@ public class AssetManager {
         int index = 0;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
-                explosion[index++] = new TextureRegion(sheet, j * 64,  i * 64 + 49, 64, 64);
-                explosion[index-1].flip(false, true);
+                explosion[index++] = new TextureRegion(sheet, j * 64, i * 64 + 49, 64, 64);
+                explosion[index - 1].flip(false, true);
             }
         }
 
@@ -85,7 +85,9 @@ public class AssetManager {
         background.flip(false, true);
 
         //Bala
-        bullet = new TextureRegion(sheet,532,310,12,3);
+        //bullet = new TextureRegion(sheet, 0, 0, 32, 16);
+        //bullet = new TextureRegion(sheet, 512, 296, 32, 17);
+        bullet = new TextureRegion(sheet, 527, 304, 17, 8);
         bullet.flip(false, true);
 
         //bulletAnim = new Animation(0.05F, bullet);
@@ -98,6 +100,10 @@ public class AssetManager {
 
         //Musica record
         recordSound = Gdx.audio.newSound((Gdx.files.internal("sounds/record.wav")));
+
+        //Sonido disparo
+        shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.ogg"));
+
 
         // Música del joc
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/Afterburner.ogg"));

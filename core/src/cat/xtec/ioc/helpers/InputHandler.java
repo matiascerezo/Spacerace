@@ -32,28 +32,22 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.UP && keycode != Input.Keys.DOWN)
-        {
+        if (keycode == Input.Keys.UP && keycode != Input.Keys.DOWN) {
             spacecraft.goUp();
             return true;
-        }
-        else if (keycode == Input.Keys.DOWN && keycode != Input.Keys.UP)
-        {
+        } else if (keycode == Input.Keys.DOWN && keycode != Input.Keys.UP) {
             spacecraft.goDown();
             return true;
-        }
-        else if (keycode == Input.Keys.RIGHT && keycode != Input.Keys.LEFT)
-        {
+        } else if (keycode == Input.Keys.RIGHT && keycode != Input.Keys.LEFT) {
             spacecraft.goStraight();
             return true;
-        }
-        else if (keycode == Input.Keys.LEFT && keycode != Input.Keys.RIGHT)
-        {
+        } else if (keycode == Input.Keys.LEFT && keycode != Input.Keys.RIGHT) {
             spacecraft.goBack();
             return true;
-        }
-
-        else {
+        } else if (keycode == Input.Keys.SPACE) {
+            spacecraft.shoot();
+            return true;
+        } else {
             spacecraft.pause();
             return true;
         }

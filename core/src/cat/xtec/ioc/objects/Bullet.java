@@ -19,6 +19,7 @@ public class Bullet extends Actor {
     private Rectangle collisionRect;
     private Vector2 position;
     private int width, height;
+    private int direction;
 
     public Bullet(float x, float y, int width, int height) {
 
@@ -28,18 +29,17 @@ public class Bullet extends Actor {
 
         // Creem el rectangle de col·lisions
         collisionRect = new Rectangle();
-        RepeatAction repeat = new RepeatAction();
-        repeat.setCount(RepeatAction.FOREVER);
+        //RepeatAction repeat = new RepeatAction();
+        //repeat.setCount(RepeatAction.FOREVER);
 
         // Per a la gestio de hit
         setBounds(position.x, position.y, width, height);
-        setTouchable(Touchable.enabled);
+        //setTouchable(Touchable.enabled);
     }
 
     public TextureRegion getBulletTexture() {
         return AssetManager.bullet;
     }
-
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
@@ -50,5 +50,13 @@ public class Bullet extends Actor {
     public Rectangle getCollisionRect() {
         return collisionRect;
     }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        //Meter en Settings la velocidad
+        this.position.x += 60 * delta;
+    }
+
 
 }

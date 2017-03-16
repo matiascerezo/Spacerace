@@ -3,12 +3,15 @@ package cat.xtec.ioc.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import cat.xtec.ioc.SpaceRace;
@@ -23,6 +26,7 @@ public class SplashScreen implements Screen {
 
     private Label.LabelStyle textStyle;
     private Label textLbl;
+    private TextButton.TextButtonStyle textButtonStyle;
 
     public SplashScreen(SpaceRace game) {
 
@@ -45,6 +49,8 @@ public class SplashScreen implements Screen {
 
         // Creem l'estil de l'etiqueta i l'etiqueta
         textStyle = new Label.LabelStyle(AssetManager.font, null);
+        textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = AssetManager.font;
         textLbl = new Label("SpaceRace", textStyle);
 
         // Creem el contenidor necessari per aplicar-li les accions
@@ -79,6 +85,14 @@ public class SplashScreen implements Screen {
         stage.act(delta);
 
         // Si es fa clic en la pantalla, canviem la pantalla
+        TextButton textButton = new TextButton("Jugar", textButtonStyle);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
+                dispose();
+            }
+        });
         if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
             dispose();

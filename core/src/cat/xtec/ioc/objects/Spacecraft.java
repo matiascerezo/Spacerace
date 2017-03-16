@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
@@ -24,10 +25,12 @@ public class Spacecraft extends Actor {
     private int width, height;
     private int direction;
     private float velocityX, velocityY;
+    private Stage stage;
+
 
     private Rectangle collisionRect;
 
-    public Spacecraft(float x, float y, int width, int height) {
+    public Spacecraft(float x, float y, int width, int height, Stage stage) {
 
         //Inicialitzem els arguments segons la crida del constructor
         this.width = width;
@@ -35,6 +38,7 @@ public class Spacecraft extends Actor {
         position = new Vector2(x, y);
         velocityX = 0;
         velocityY = 0;
+        this.stage = stage;
 
 
         //Inicialitzem la spacecraft a l'estat normal
@@ -79,6 +83,16 @@ public class Spacecraft extends Actor {
         collisionRect.set(position.x, position.y + 3, width, 10);
         setBounds(position.x, position.y, width, height);
 
+    }
+
+    public void shoot() {
+        for (Actor actor : stage.getActors()) {
+            if (actor.getName() != null && actor.getName().equalsIgnoreCase("spacecraft")) {
+                stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8));
+                AssetManager.shootSound.play();
+                break;
+            }
+        }
     }
 
     // Getters dels atributs principals
