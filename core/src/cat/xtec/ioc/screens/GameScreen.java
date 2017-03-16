@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -214,7 +213,6 @@ public class GameScreen implements Screen {
             };
             thread.start();
             AssetManager.recordSound.play();
-            
         }
         if (colisio) {
             if (scrollHandler.getPuntuacio() > 0) {

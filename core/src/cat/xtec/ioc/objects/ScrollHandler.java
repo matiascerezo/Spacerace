@@ -78,11 +78,12 @@ public class ScrollHandler extends Group {
             if (asteroid.isLeftOfScreen()) {
                 if (i == 0) {
                     asteroid.reset(asteroids.get(asteroids.size() - 1).getTailX() + Settings.ASTEROID_GAP);
-                    //Puntuacio
+
                 } else {
                     asteroid.reset(asteroids.get(i - 1).getTailX() + Settings.ASTEROID_GAP);
 
                 }
+                //Puntuacio
                 setPuntuacio(false, 10);
             }
         }
