@@ -89,7 +89,7 @@ public class Spacecraft extends Actor {
         for (Actor actor : stage.getActors()) {
             if (actor.getName() != null && actor.getName().equalsIgnoreCase("spacecraft")) {
                 stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8));
-                AssetManager.shootSound.play();
+                //AssetManager.shootSound.play();
                 break;
             }
         }

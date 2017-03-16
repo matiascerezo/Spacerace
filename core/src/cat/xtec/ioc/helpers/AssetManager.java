@@ -102,7 +102,7 @@ public class AssetManager {
         recordSound = Gdx.audio.newSound((Gdx.files.internal("sounds/record.wav")));
 
         //Sonido disparo
-        shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.ogg"));
+        //shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.ogg"));
 
 
         // Música del joc
