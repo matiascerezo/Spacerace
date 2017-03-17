@@ -49,7 +49,7 @@ public class Asteroid extends Scrollable {
 
     public void setOrigin() {
 
-        this.setOrigin(width/2 + 1, height/2);
+        this.setOrigin(width / 2 + 1, height / 2);
 
     }
 
@@ -71,7 +71,7 @@ public class Asteroid extends Scrollable {
         // Modificarem l'alçada i l'amplada segons l'al·leatori anterior
         width = height = 34 * newSize;
         // La posició serà un valor aleatòri entre 0 i l'alçada de l'aplicació menys l'alçada
-        position.y =  new Random().nextInt(Settings.GAME_HEIGHT - (int) height);
+        position.y = new Random().nextInt(Settings.GAME_HEIGHT - (int) height);
 
         assetAsteroid = r.nextInt(15);
         setOrigin();
@@ -92,5 +92,10 @@ public class Asteroid extends Scrollable {
             return (Intersector.overlaps(collisionCircle, nau.getCollisionRect()));
         }
         return false;
+    }
+
+    public boolean collidesWithBullet(Bullet bullet) {
+        // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
+        return (Intersector.overlaps(collisionCircle, bullet.getCollisionRect()));
     }
 }

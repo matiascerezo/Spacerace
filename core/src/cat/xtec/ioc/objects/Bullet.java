@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 
+import java.util.ArrayList;
+
 import cat.xtec.ioc.helpers.AssetManager;
 
 /**
@@ -20,12 +22,14 @@ public class Bullet extends Actor {
     private Vector2 position;
     private int width, height;
     private int direction;
+    private ScrollHandler scrollHandler;
 
-    public Bullet(float x, float y, int width, int height) {
+    public Bullet(float x, float y, int width, int height, ScrollHandler scrollHandler) {
 
         this.width = width;
         this.height = height;
         position = new Vector2(x, y);
+        this.scrollHandler = scrollHandler;
 
         // Creem el rectangle de col·lisions
         collisionRect = new Rectangle();
@@ -56,6 +60,21 @@ public class Bullet extends Actor {
         super.act(delta);
         //Meter en Settings la velocidad
         this.position.x += 60 * delta;
+
+
+        collidesBullet(scrollHandler.getAsteroids());
+
+    }
+
+    public boolean collidesBullet(ArrayList<Asteroid> asteroids) {
+        // Comprovem les col·lisions entre cada asteroid i la nau
+        for (Asteroid asteroid : asteroids) {
+            if (asteroid!= null && asteroid.collidesWithBullet(this)) {
+                this.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
 

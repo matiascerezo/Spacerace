@@ -112,9 +112,7 @@ public class ScrollHandler extends Group {
         return false;
     }
 
-    public boolean collidesBala() {
-        return false;
-    }
+
 
     public void reset() {
 

@@ -26,6 +26,7 @@ public class Spacecraft extends Actor {
     private int direction;
     private float velocityX, velocityY;
     private Stage stage;
+    private ScrollHandler scrollHandler;
 
 
     private Rectangle collisionRect;
@@ -39,6 +40,7 @@ public class Spacecraft extends Actor {
         velocityX = 0;
         velocityY = 0;
         this.stage = stage;
+        scrollHandler = new ScrollHandler();
 
 
         //Inicialitzem la spacecraft a l'estat normal
@@ -88,7 +90,7 @@ public class Spacecraft extends Actor {
     public void shoot() {
         for (Actor actor : stage.getActors()) {
             if (actor.getName() != null && actor.getName().equalsIgnoreCase("spacecraft")) {
-                stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8));
+                stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8, scrollHandler));
                 //AssetManager.shootSound.play();
                 break;
             }

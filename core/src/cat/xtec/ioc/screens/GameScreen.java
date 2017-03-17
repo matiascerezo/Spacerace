@@ -222,6 +222,7 @@ public class GameScreen implements Screen {
             colisio = true;
         }
 
+
         //if (scrollHandler.co)
         if (recordActual < scrollHandler.getPuntuacio()) {
             recordActual = scrollHandler.getPuntuacio();
