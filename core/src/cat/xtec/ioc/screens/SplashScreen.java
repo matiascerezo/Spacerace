@@ -3,6 +3,7 @@ package cat.xtec.ioc.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -26,7 +27,9 @@ public class SplashScreen implements Screen {
 
     private Label.LabelStyle textStyle;
     private Label textLbl;
+    private TextButton botonJugar;
     private TextButton.TextButtonStyle textButtonStyle;
+    private Batch batch;
 
     public SplashScreen(SpaceRace game) {
 
@@ -53,15 +56,23 @@ public class SplashScreen implements Screen {
         textButtonStyle.font = AssetManager.font;
         textLbl = new Label("SpaceRace", textStyle);
 
+        botonJugar = new TextButton("Jugar", textButtonStyle);
+
         // Creem el contenidor necessari per aplicar-li les accions
         Container container = new Container(textLbl);
         container.setTransform(true);
         container.center();
         container.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2);
 
+        Container containerJugar = new Container(botonJugar);
+        containerJugar.setTransform(true);
+        containerJugar.center();
+        containerJugar.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 30);
+
         // Afegim les accions de escalar: primer es fa gran i després torna a l'estat original ininterrompudament
         container.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.sequence(Actions.scaleTo(1.5f, 1.5f, 1), Actions.scaleTo(1, 1, 1))));
         stage.addActor(container);
+        stage.addActor(containerJugar);
 
         // Creem la imatge de la nau i li assignem el moviment en horitzontal
         Image spacecraft = new Image(AssetManager.spacecraft);
@@ -85,43 +96,45 @@ public class SplashScreen implements Screen {
         stage.act(delta);
 
         // Si es fa clic en la pantalla, canviem la pantalla
-        TextButton textButton = new TextButton("Jugar", textButtonStyle);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
-                dispose();
-            }
-        });
-        if (Gdx.input.isTouched()) {
+
+
+       botonJugar.addListener(new ChangeListener() {
+                                  @Override
+                                  public void changed(ChangeEvent event, Actor actor) {
+                                      game.setScreen(new MenuScreen(stage.getBatch(), stage.getViewport(),game));
+                                      dispose();
+                                  }
+                              });
+        Gdx.input.setInputProcessor(stage);
+        /*if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
             dispose();
+        }*/
+
+    }
+
+        @Override
+        public void resize ( int width, int height){
+
         }
 
+        @Override
+        public void pause () {
+
+        }
+
+        @Override
+        public void resume () {
+
+        }
+
+        @Override
+        public void hide () {
+
+        }
+
+        @Override
+        public void dispose () {
+
+        }
     }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-}

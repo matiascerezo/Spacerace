@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
+import java.util.Set;
 
+import cat.xtec.ioc.SpaceRace;
 import cat.xtec.ioc.helpers.AssetManager;
 import cat.xtec.ioc.helpers.InputHandler;
 import cat.xtec.ioc.objects.Asteroid;
@@ -33,7 +35,7 @@ public class GameScreen implements Screen {
     private Spacecraft spacecraft;
     private Bullet bullet;
     private ScrollHandler scrollHandler;
-
+    private SpaceRace game;
     // Encarregats de dibuixar elements per pantalla
     private ShapeRenderer shapeRenderer;
     private Batch batch;
@@ -53,11 +55,18 @@ public class GameScreen implements Screen {
     boolean vegada;
     Thread thread;
 
-    public GameScreen(Batch prevBatch, Viewport prevViewport) {
+    public GameScreen(Batch prevBatch, Viewport prevViewport, String dificultad) {
 
         // Iniciem la música
         AssetManager.music.play();
 
+        if (dificultad.equals("facil")) {
+            Settings.ASTEROID_GAP += 30;
+            Settings.SPACECRAFT_VELOCITY += 20;
+        } else if (dificultad.equals("mig")) {
+            Settings.ASTEROID_GAP += 25;
+            Settings.SPACECRAFT_VELOCITY += 10;
+        }
         // Creem el ShapeRenderer
         shapeRenderer = new ShapeRenderer();
 
@@ -73,6 +82,7 @@ public class GameScreen implements Screen {
         // Afegim els actors a l'stage
         stage.addActor(scrollHandler);
         stage.addActor(spacecraft);
+
         //stage.addActor(bullet);
         // Donem nom a l'Actor
         spacecraft.setName("spacecraft");
@@ -89,6 +99,7 @@ public class GameScreen implements Screen {
 
         // Assignem com a gestor d'entrada la classe InputHandler
         Gdx.input.setInputProcessor(new InputHandler(this));
+
 
     }
 
@@ -159,35 +170,35 @@ public class GameScreen implements Screen {
                 break;
             case READY:
                 if (contador == 0) {
-                    updateReady(true);
+                    updateReady(true, false);
                     contador = 1;
                 } else {
-                    updateReady(false);
+                    updateReady(false,true);
                 }
                 break;
         }
         //drawElements();
     }
 
-    private void updateReady(boolean primeraVegada) {
+    private void updateReady(boolean primeraVegada, boolean mostrar) {
         // Dibuixem el text al centre de la pantalla
         batch.begin();
         if (!primeraVegada) {
             AssetManager.font.draw(batch, textLayout, (Settings.GAME_WIDTH / 2) - textLayout.width / 2, (Settings.GAME_HEIGHT / 2) - textLayout.height / 2);
             //AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH / 2) - textDificil.width / 2, (Settings.GAME_HEIGHT / 2) - textMig.height / 2);
         } else {
-            textLayout.setText(AssetManager.font, "Dificultat");
-            textFacil.setText(AssetManager.font, "\nFacil");
-            textMig.setText(AssetManager.font, "\nMig\n");
-            textDificil.setText(AssetManager.font, "\n\nDificil");
-            AssetManager.font.draw(batch, textLayout, (Settings.GAME_WIDTH / 2) - textLayout.width / 2, (Settings.GAME_HEIGHT / 6) - textLayout.height / 2);
-            AssetManager.font.draw(batch, textFacil, (Settings.GAME_WIDTH / 2) - textFacil.width / 2, (Settings.GAME_HEIGHT / 3) - textFacil.height / 2);
-            AssetManager.font.draw(batch, textMig, (Settings.GAME_WIDTH / 2) - textMig.width / 2, (Settings.GAME_HEIGHT / 2) - textMig.height / 2);
-            AssetManager.font.draw(batch, textDificil, (Settings.GAME_WIDTH / 2) - textDificil.width / 2, (Settings.GAME_HEIGHT / 2) - textMig.height / 2);
+            if (mostrar) {
+                AssetManager.font.draw(batch, textLayout, Settings.GAME_WIDTH / 2 - textLayout.width / 2, Settings.GAME_HEIGHT / 2 - textLayout.height / 2);
+                textLayout.setText(AssetManager.font, "Torna a intentar-ho");
+            } else {
+                AssetManager.font.draw(batch, textLayout, Settings.GAME_WIDTH / 2 - textLayout.width / 2, Settings.GAME_HEIGHT / 2 - textLayout.height / 2);
+                textLayout.setText(AssetManager.font, "Som-hi!");
+            }
         }
         //stage.addActor(textLbl);
         batch.end();
     }
+
 
     private void updateRunning(float delta) {
         stage.act(delta);
@@ -196,7 +207,7 @@ public class GameScreen implements Screen {
         if (!colisio) {
             textPuntuacio.setText(AssetManager.font, "Puntuacio: " + scrollHandler.getPuntuacio());
             AssetManager.font.getData().setScale(0.3f);
-            AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 90), 2);
+            AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 100), 2);
             /*if (scrollHandler.getPuntuacio()>100){
                 AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 110), 2);
             }*/
@@ -206,7 +217,7 @@ public class GameScreen implements Screen {
             // Si hi ha hagut col·lisió: Reproduïm l'explosió i posem l'estat a GameOver
             AssetManager.explosionSound.play();
             stage.getRoot().findActor("spacecraft").remove();
-            textLayout.setText(AssetManager.font, "Has perdut!");
+            //textLayout.setText(AssetManager.font, "Has perdut!");
             currentState = GameState.GAMEOVER;
             colisio = true;
         }
@@ -246,6 +257,7 @@ public class GameScreen implements Screen {
         scrollHandler.reset();
 
         thread = new Thread();
+
 
         // Posem l'estat a 'Ready'
         currentState = GameState.READY;

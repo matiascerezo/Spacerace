@@ -3,13 +3,18 @@ package cat.xtec.ioc.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import cat.xtec.ioc.SpaceRace;
 import cat.xtec.ioc.helpers.AssetManager;
@@ -27,8 +32,18 @@ public class MenuScreen implements Screen {
     private Label textLbl;
     private int dificil, facil, mig;
     private int velocitatEntreAsteroids;
+    private TextButton botonFacil, botonDificil, botonMedio;
+    private Batch batch;
 
-    public MenuScreen(SpaceRace game) {
+    private TextButton.TextButtonStyle textButtonStyle;
+
+    public MenuScreen(Batch prevBatch, Viewport prevViewport, SpaceRace game) {
+
+        stage = new Stage(prevViewport, prevBatch);
+        batch = stage.getBatch();
+
+        textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = AssetManager.font;
 
         this.game = game;
 
@@ -51,15 +66,63 @@ public class MenuScreen implements Screen {
         textStyle = new Label.LabelStyle(AssetManager.font, null);
         textLbl = new Label("Dificultat", textStyle);
 
+        botonFacil = new TextButton("Facil", textButtonStyle);
+        botonDificil = new TextButton("Dificil", textButtonStyle);
+        botonMedio = new TextButton("Mig", textButtonStyle);
+
         // Creem el contenidor necessari per aplicar-li les accions
-        Container container = new Container(textLbl);
-        container.setTransform(true);
-        container.center();
-        container.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2);
+        Container containerFacil = new Container(botonFacil);
+        containerFacil.setTransform(true);
+        containerFacil.center();
+        containerFacil.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 - 15);
+
+        Container containerDif = new Container(textLbl);
+        containerDif.setTransform(true);
+        containerDif.center();
+        containerDif.setPosition(Settings.GAME_WIDTH / 2, 15);
+
+        Container containerDificil = new Container(botonDificil);
+        containerDificil.setTransform(true);
+        containerDificil.center();
+        containerDificil.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 30);
+
+        Container containerMig = new Container(botonMedio);
+        containerMig.setTransform(true);
+        containerMig.center();
+        containerMig.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 7);
+
+        stage.addActor(containerFacil);
+        stage.addActor(containerDificil);
+        stage.addActor(containerDif);
+        stage.addActor(containerMig);
 
         // Afegim les accions de escalar: primer es fa gran i després torna a l'estat original ininterrompudament
 
-        stage.addActor(container);
+        //stage.addActor(container);
+
+        botonFacil.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "facil"));
+                dispose();
+            }
+        });
+        botonMedio.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "mig"));
+                dispose();
+            }
+        });
+
+        botonDificil.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "dificil"));
+                dispose();
+            }
+        });
+        Gdx.input.setInputProcessor(stage);
 
         // Creem la imatge de la nau i li assignem el moviment en horitzontal
         Image spacecraft = new Image(AssetManager.spacecraft);
@@ -83,11 +146,12 @@ public class MenuScreen implements Screen {
         stage.act(delta);
 
         // Si es fa clic en la pantalla, canviem la pantalla
-        if (Gdx.input.isTouched()) {
+        /*if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
             dispose();
-        }
+        }*/
         //if (Gdx.input.)
+
 
     }
 
