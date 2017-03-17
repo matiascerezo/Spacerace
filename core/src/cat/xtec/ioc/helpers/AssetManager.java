@@ -29,7 +29,7 @@ public class AssetManager {
     //public static Animation bulletAnim;
 
     // Sons
-    public static Sound explosionSound, recordSound, shootSound;
+    public static Sound explosionSound, recordSound, shootSound, shootSound1;
     public static Music music;
 
 
@@ -102,7 +102,8 @@ public class AssetManager {
         recordSound = Gdx.audio.newSound((Gdx.files.internal("sounds/record.wav")));
 
         //Sonido disparo
-        //shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.ogg"));
+        shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.wav"));
+        shootSound1 = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot1.wav"));
 
 
         // Música del joc

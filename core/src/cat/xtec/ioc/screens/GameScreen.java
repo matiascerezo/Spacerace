@@ -173,7 +173,7 @@ public class GameScreen implements Screen {
                     updateReady(true, false);
                     contador = 1;
                 } else {
-                    updateReady(false,true);
+                    updateReady(false, true);
                 }
                 break;
         }
@@ -221,7 +221,6 @@ public class GameScreen implements Screen {
             currentState = GameState.GAMEOVER;
             colisio = true;
         }
-
 
         //if (scrollHandler.co)
         if (recordActual < scrollHandler.getPuntuacio()) {

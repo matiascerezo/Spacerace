@@ -1,5 +1,6 @@
 package cat.xtec.ioc.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -61,21 +62,22 @@ public class Bullet extends Actor {
         //Meter en Settings la velocidad
         this.position.x += 60 * delta;
 
-
+        //collisionRect.set(position.x, position.y + 3, width, 10);
+        //collisionRect.set(position.x, position.y, width, height + 2);
+        collisionRect.set(position.x,position.y, width, height);
         collidesBullet(scrollHandler.getAsteroids());
-
     }
 
     public boolean collidesBullet(ArrayList<Asteroid> asteroids) {
         // Comprovem les col·lisions entre cada asteroid i la nau
         for (Asteroid asteroid : asteroids) {
-            if (asteroid!= null && asteroid.collidesWithBullet(this)) {
+            //Gdx.app.log("Asteroide", "" + asteroid.collidesWithBullet(this));
+            if (asteroid.collidesWithBullet(this)) {
+                Gdx.app.log("Proyectil", "desaparece");
                 this.remove();
                 return true;
             }
         }
         return false;
     }
-
-
 }

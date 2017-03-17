@@ -112,8 +112,6 @@ public class ScrollHandler extends Group {
         return false;
     }
 
-
-
     public void reset() {
 
         // Posem el primer asteroid fora de la pantalla per la dreta
