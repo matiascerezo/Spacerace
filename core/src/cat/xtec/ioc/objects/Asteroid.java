@@ -98,4 +98,8 @@ public class Asteroid extends Scrollable {
         // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
         return (Intersector.overlaps(collisionCircle, bullet.getCollisionRect()));
     }
+
+    public void delete() {
+        this.setVisible(false);
+    }
 }

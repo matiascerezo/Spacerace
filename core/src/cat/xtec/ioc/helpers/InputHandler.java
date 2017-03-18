@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import cat.xtec.ioc.objects.Spacecraft;
 import cat.xtec.ioc.screens.GameScreen;
+import cat.xtec.ioc.utils.Settings;
 
 public class InputHandler implements InputProcessor {
 
@@ -44,9 +45,6 @@ public class InputHandler implements InputProcessor {
         } else if (keycode == Input.Keys.LEFT && keycode != Input.Keys.RIGHT) {
             spacecraft.goBack();
             return true;
-        } else if (keycode == Input.Keys.SPACE) {
-            spacecraft.shoot();
-            return true;
         } else {
             spacecraft.pause();
             return true;
@@ -68,25 +66,27 @@ public class InputHandler implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
         switch (screen.getCurrentState()) {
-
             case READY:
                 // Si fem clic comencem el joc
                 screen.setCurrentState(GameScreen.GameState.RUNNING);
                 break;
             case RUNNING:
-                previousY = screenY;
-
-                stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
-                Actor actorHit = stage.hit(stageCoord.x, stageCoord.y, true);
-                if (actorHit != null)
-                    Gdx.app.log("HIT", actorHit.getName());
+                if (screenX <= Settings.GAME_WIDTH * 0.4) {
+                    previousY = screenY;
+                    stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
+                    Actor actorHit = stage.hit(stageCoord.x, stageCoord.y, true);
+                    if (actorHit != null)
+                        Gdx.app.log("HIT", actorHit.getName());
+                } else {
+                    stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
+                    spacecraft.shoot(stageCoord);
+                }
                 break;
             // Si l'estat és GameOver tornem a iniciar el joc
             case GAMEOVER:
                 screen.reset();
                 break;
         }
-
         return true;
     }
 

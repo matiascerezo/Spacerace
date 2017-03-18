@@ -87,14 +87,18 @@ public class Spacecraft extends Actor {
 
     }
 
-    public void shoot() {
+    public void shoot(Vector2 pulsacion) {
         for (Actor actor : stage.getActors()) {
             if (actor.getName() != null && actor.getName().equalsIgnoreCase("spacecraft")) {
-                stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8, scrollHandler));
+                stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8, scrollHandler, pulsacion));
                 AssetManager.shootSound1.play();
                 break;
             }
         }
+    }
+    public void shoot(){
+
+        //stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8, scrollHandler));
     }
 
     // Getters dels atributs principals
