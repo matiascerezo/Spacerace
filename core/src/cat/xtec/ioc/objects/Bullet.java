@@ -72,7 +72,6 @@ public class Bullet extends Actor {
         collisionRect.set(position.x, position.y, width, height + 2);
         if (position.x > Settings.GAME_WIDTH) {
             this.remove();
-            Gdx.app.log("Bala", "fuera");
         }
         collidesBullet(scrollHandler.getAsteroids());
     }
@@ -82,7 +81,6 @@ public class Bullet extends Actor {
         for (Asteroid asteroid : asteroids) {
             //Gdx.app.log("Asteroide", "" + asteroid.collidesWithBullet(this));
             if (asteroid.collidesWithBullet(this)) {
-                Gdx.app.log("Proyectil", "desaparece");
                 this.remove();
                 asteroid.delete();
                 return true;

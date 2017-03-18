@@ -31,7 +31,7 @@ public class Spacecraft extends Actor {
 
     private Rectangle collisionRect;
 
-    public Spacecraft(float x, float y, int width, int height, Stage stage) {
+    public Spacecraft(float x, float y, int width, int height, Stage stage, ScrollHandler scrollHandler) {
 
         //Inicialitzem els arguments segons la crida del constructor
         this.width = width;
@@ -40,7 +40,7 @@ public class Spacecraft extends Actor {
         velocityX = 0;
         velocityY = 0;
         this.stage = stage;
-        scrollHandler = new ScrollHandler();
+        this.scrollHandler = scrollHandler;
 
 
         //Inicialitzem la spacecraft a l'estat normal
@@ -95,10 +95,6 @@ public class Spacecraft extends Actor {
                 break;
             }
         }
-    }
-    public void shoot(){
-
-        //stage.addActor(new Bullet(actor.getX() + actor.getWidth(), actor.getY() + actor.getHeight() / 2, 17, 8, scrollHandler));
     }
 
     // Getters dels atributs principals

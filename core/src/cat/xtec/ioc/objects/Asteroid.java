@@ -3,6 +3,7 @@ package cat.xtec.ioc.objects;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
@@ -19,6 +20,11 @@ public class Asteroid extends Scrollable {
     Random r;
 
     int assetAsteroid;
+    boolean destruido;
+    private Batch batch;
+    // Per controlar l'animació de l'explosió
+    private float explosionTime = 0;
+    private Stage stage;
 
     public Asteroid(float x, float y, float width, float height, float velocity) {
         super(x, y, width, height, velocity);
@@ -30,6 +36,11 @@ public class Asteroid extends Scrollable {
         assetAsteroid = r.nextInt(15);
 
         setOrigin();
+
+//        batch = stage.getBatch();
+
+
+        explosionTime += 5;
 
         // Rotacio
         RotateByAction rotateAction = new RotateByAction();
@@ -66,15 +77,20 @@ public class Asteroid extends Scrollable {
     @Override
     public void reset(float newX) {
         super.reset(newX);
+
+        this.setVisible(true);
+        destruido = false;
         // Obtenim un número al·leatori entre MIN i MAX
         float newSize = Methods.randomFloat(Settings.MIN_ASTEROID, Settings.MAX_ASTEROID);
         // Modificarem l'alçada i l'amplada segons l'al·leatori anterior
         width = height = 34 * newSize;
+
         // La posició serà un valor aleatòri entre 0 i l'alçada de l'aplicació menys l'alçada
         position.y = new Random().nextInt(Settings.GAME_HEIGHT - (int) height);
 
         assetAsteroid = r.nextInt(15);
         setOrigin();
+        explosionTime = 0.0f;
     }
 
 
@@ -86,20 +102,27 @@ public class Asteroid extends Scrollable {
 
     // Retorna true si hi ha col·lisió
     public boolean collides(Spacecraft nau) {
-
-        if (position.x <= nau.getX() + nau.getWidth()) {
+        if (!destruido) {
             // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
             return (Intersector.overlaps(collisionCircle, nau.getCollisionRect()));
         }
+
         return false;
     }
 
     public boolean collidesWithBullet(Bullet bullet) {
+
         // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
         return (Intersector.overlaps(collisionCircle, bullet.getCollisionRect()));
     }
 
     public void delete() {
+        //batch.begin();
+        AssetManager.explosionSound.play();
+        // Si hi ha hagut col·lisió: Reproduïm l'explosió i posem l'estat a GameOver
+        //batch.draw(AssetManager.explosionAnim.getKeyFrame(explosionTime, false), (this.getX() + this.getWidth() / 2) - 32, this.getY() + this.getHeight() / 2 - 32, 64, 64);
+       // batch.end();
+        destruido = true;
         this.setVisible(false);
     }
 }

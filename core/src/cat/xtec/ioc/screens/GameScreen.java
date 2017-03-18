@@ -74,10 +74,10 @@ public class GameScreen implements Screen {
         stage = new Stage(prevViewport, prevBatch);
 
         batch = stage.getBatch();
-
-        // Creem la nau i la resta d'objectes
-        spacecraft = new Spacecraft(Settings.SPACECRAFT_STARTX, Settings.SPACECRAFT_STARTY, Settings.SPACECRAFT_WIDTH, Settings.SPACECRAFT_HEIGHT, stage);
         scrollHandler = new ScrollHandler();
+        // Creem la nau i la resta d'objectes
+        spacecraft = new Spacecraft(Settings.SPACECRAFT_STARTX, Settings.SPACECRAFT_STARTY, Settings.SPACECRAFT_WIDTH, Settings.SPACECRAFT_HEIGHT, stage, scrollHandler);
+
 
         // Afegim els actors a l'stage
         stage.addActor(scrollHandler);
