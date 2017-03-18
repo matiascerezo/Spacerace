@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import java.util.ArrayList;
 
 import cat.xtec.ioc.helpers.AssetManager;
+import cat.xtec.ioc.utils.Settings;
 
 /**
  * Created by Matias on 16/03/2017.
@@ -24,13 +25,16 @@ public class Bullet extends Actor {
     private int width, height;
     private int direction;
     private ScrollHandler scrollHandler;
+    //private Vector2 posicion;
+    private Vector2 posicionPulsada;
 
-    public Bullet(float x, float y, int width, int height, ScrollHandler scrollHandler) {
+    public Bullet(float x, float y, int width, int height, ScrollHandler scrollHandler, Vector2 pulsacion) {
 
         this.width = width;
         this.height = height;
         position = new Vector2(x, y);
         this.scrollHandler = scrollHandler;
+        this.posicionPulsada = pulsacion;
 
         // Creem el rectangle de col·lisions
         collisionRect = new Rectangle();
@@ -62,9 +66,14 @@ public class Bullet extends Actor {
         //Meter en Settings la velocidad
         this.position.x += 60 * delta;
 
+
         //collisionRect.set(position.x, position.y + 3, width, 10);
         //collisionRect.set(position.x, position.y, width, height + 2);
-        collisionRect.set(position.x,position.y, width, height);
+        collisionRect.set(position.x, position.y, width, height + 2);
+        if (position.x > Settings.GAME_WIDTH) {
+            this.remove();
+            Gdx.app.log("Bala", "fuera");
+        }
         collidesBullet(scrollHandler.getAsteroids());
     }
 
@@ -75,8 +84,10 @@ public class Bullet extends Actor {
             if (asteroid.collidesWithBullet(this)) {
                 Gdx.app.log("Proyectil", "desaparece");
                 this.remove();
+                asteroid.delete();
                 return true;
             }
+
         }
         return false;
     }
