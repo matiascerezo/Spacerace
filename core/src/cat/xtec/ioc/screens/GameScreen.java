@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
                 if (puntuacio < 0) {
                     puntuacio = 0;
                 }
-                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + puntuacio + " punts\n" +
+                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nAsteroides passats: " + puntuacio + " punts\n" +
                         "Asteroides destruits: " + scrollHandler.getPuntuacioPerDestruccio() + " punts\n\nTotal: " +
                         ((scrollHandler.getPuntuacioPerDestruccio() + scrollHandler.getPuntuacio()) - scrollHandler.getPuntuacioPerDestruccio()) + " punts");
             } else {

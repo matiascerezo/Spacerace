@@ -72,8 +72,8 @@ public class OptionsScreen implements Screen {
         textLbl = new Label("Opcions", textStyle);
 
         //Establim el text que anirá en els botons.
-        botonQuitarVolumen = new TextButton("Treure música", textButtonStyle);
-        botonPonerVolumen = new TextButton("Possar música", textButtonStyle);
+        botonQuitarVolumen = new TextButton("Treure musica", textButtonStyle);
+        botonPonerVolumen = new TextButton("Possar musica", textButtonStyle);
 
         // Creem el contenidor necessari per aplicar-li les accions
         Container containerPonerVolum = new Container(botonPonerVolumen);
