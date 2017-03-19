@@ -13,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import cat.xtec.ioc.helpers.AssetManager;
 import cat.xtec.ioc.utils.Settings;
 
+/**
+ * Clase que gestiona el objeto Nave
+ */
 public class Spacecraft extends Actor {
 
     // Distintes posicions de la spacecraft, recta, pujant i baixant
@@ -42,7 +45,6 @@ public class Spacecraft extends Actor {
         this.stage = stage;
         this.scrollHandler = scrollHandler;
 
-
         //Inicialitzem la spacecraft a l'estat normal
         direction = SPACECRAFT_STRAIGHT;
 
@@ -65,7 +67,6 @@ public class Spacecraft extends Actor {
     }
 
     public void act(float delta) {
-
         //Movem la spacecraft depenent de la direcció controlant que no surti de la pantalla
         switch (direction) {
             case SPACECRAFT_UP:
@@ -81,12 +82,14 @@ public class Spacecraft extends Actor {
             case SPACECRAFT_STRAIGHT:
                 break;
         }
-
         collisionRect.set(position.x, position.y + 3, width, 10);
         setBounds(position.x, position.y, width, height);
-
     }
 
+    /**
+     * Método que crea una bala y inicia el sonido de disparo.
+     * @param pulsacion
+     */
     public void shoot(Vector2 pulsacion) {
         for (Actor actor : stage.getActors()) {
             if (actor.getName() != null && actor.getName().equalsIgnoreCase("spacecraft")) {
@@ -127,7 +130,6 @@ public class Spacecraft extends Actor {
 
     // Posem la spacecraft al seu estat original
     public void goStraight() {
-
         direction = SPACECRAFT_STRAIGHT;
         velocityX = Settings.SPACECRAFT_VELOCITY_X;
     }
@@ -135,7 +137,6 @@ public class Spacecraft extends Actor {
     public void goBack() {
         direction = SPACECRAFT_STRAIGHT;
         velocityX = -Settings.SPACECRAFT_VELOCITY_X;
-
     }
 
     public void pause() {
@@ -146,7 +147,6 @@ public class Spacecraft extends Actor {
 
     // Obtenim el TextureRegion depenent de la posició de la spacecraft
     public TextureRegion getSpacecraftTexture() {
-
         switch (direction) {
             case SPACECRAFT_STRAIGHT:
                 return AssetManager.spacecraft;
@@ -159,8 +159,10 @@ public class Spacecraft extends Actor {
         }
     }
 
+    /**
+     * Para reiniciar la posicion de la nave y el rectangulo de colisiones.
+     */
     public void reset() {
-
         // La posem a la posició inicial i a l'estat normal
         position.x = Settings.SPACECRAFT_STARTX;
         position.y = Settings.SPACECRAFT_STARTY;
@@ -175,7 +177,6 @@ public class Spacecraft extends Actor {
         else
             angle = (float) -Math.atan(velocityY / velocityX);
         return angle;
-
     }
 
     @Override
@@ -194,6 +195,10 @@ public class Spacecraft extends Actor {
         batch.draw(getSpacecraftTexture(), position.x, position.y, width, height);
     }
 
+    /**
+     * Obtener el rectangulo de colisiones de la nave.
+     * @return
+     */
     public Rectangle getCollisionRect() {
         return collisionRect;
     }

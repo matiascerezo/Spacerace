@@ -3,7 +3,6 @@ package cat.xtec.ioc.objects;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 
@@ -21,10 +20,8 @@ public class Asteroid extends Scrollable {
 
     int assetAsteroid;
     boolean destruido;
-    private Batch batch;
-    // Per controlar l'animació de l'explosió
+
     private float explosionTime = 0;
-    private Stage stage;
 
     public Asteroid(float x, float y, float width, float height, float velocity) {
         super(x, y, width, height, velocity);
@@ -37,11 +34,7 @@ public class Asteroid extends Scrollable {
 
         setOrigin();
 
-//        batch = stage.getBatch();
-
-
         explosionTime += 5;
-
         // Rotacio
         RotateByAction rotateAction = new RotateByAction();
         rotateAction.setAmount(-90f);
@@ -52,28 +45,30 @@ public class Asteroid extends Scrollable {
         repeat.setAction(rotateAction);
         repeat.setCount(RepeatAction.FOREVER);
 
-        // Equivalent:
-        // this.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.rotateBy(-90f, 0.2f)));
-
         this.addAction(repeat);
     }
 
     public void setOrigin() {
-
         this.setOrigin(width / 2 + 1, height / 2);
-
     }
 
+    /**
+     * Método que se ejecuta todoel rato y actualiza el circulo de colisiones.
+     *
+     * @param delta
+     */
     @Override
     public void act(float delta) {
         super.act(delta);
-
         // Actualitzem el cercle de col·lisions (punt central de l'asteroid i el radi.
         collisionCircle.set(position.x + width / 2.0f, position.y + width / 2.0f, width / 2.0f);
-
-
     }
 
+    /**
+     * Método que vuelve todoa su estado inicial.
+     *
+     * @param newX
+     */
     @Override
     public void reset(float newX) {
         super.reset(newX);
@@ -106,22 +101,31 @@ public class Asteroid extends Scrollable {
             // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
             return (Intersector.overlaps(collisionCircle, nau.getCollisionRect()));
         }
-
         return false;
     }
 
+    /**
+     * Método que comprueba si ha habido colision con la bala y devuelve un booleano con la respuesta.
+     * Se desactiva para que la siguiente bala no colisione otra vez.
+     *
+     * @param bullet
+     * @return
+     */
     public boolean collidesWithBullet(Bullet bullet) {
-
-        // Comprovem si han col·lisionat sempre i quan l'asteroid estigui a la mateixa alçada que la spacecraft
-        return (Intersector.overlaps(collisionCircle, bullet.getCollisionRect()));
+        if (!destruido) {
+            return (Intersector.overlaps(collisionCircle, bullet.getCollisionRect()));
+        }
+        return false;
     }
 
+    /**
+     * Método que se ejecuta cuando el asteroide choca con una bala, reproduce el sonido de explosión,
+     * cambia el booleano a true para desactivar la colision en dicho metodo y oculta el asteroide para
+     * causar sensación de que se ha destruido.
+     */
     public void delete() {
-        //batch.begin();
-        AssetManager.explosionSound.play();
-        // Si hi ha hagut col·lisió: Reproduïm l'explosió i posem l'estat a GameOver
-        //batch.draw(AssetManager.explosionAnim.getKeyFrame(explosionTime, false), (this.getX() + this.getWidth() / 2) - 32, this.getY() + this.getHeight() / 2 - 32, 64, 64);
-       // batch.end();
+        // Si hi ha hagut col·lisió: Reproduïm l'explosió
+        AssetManager.explosion1Sound.play();
         destruido = true;
         this.setVisible(false);
     }

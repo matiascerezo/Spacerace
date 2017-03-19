@@ -78,6 +78,7 @@ public class InputHandler implements InputProcessor {
                     if (actorHit != null)
                         Gdx.app.log("HIT", actorHit.getName());
                 } else {
+                    //Para recoger la pulsacion tactil en la pantalla del telefono.
                     stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
                     spacecraft.shoot(stageCoord);
                 }

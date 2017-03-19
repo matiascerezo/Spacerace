@@ -45,20 +45,32 @@ public class GameScreen implements Screen {
 
     // Preparem el textLayout per escriure text
     private GlyphLayout textLayout;
-    private GlyphLayout textFacil;
-    private GlyphLayout textMig;
-    private GlyphLayout textDificil;
     private GlyphLayout textPuntuacio;
-    //private GlyphLayout textPuntuacio;
     int recordActual = 0;
+    boolean playMusic;
 
     boolean vegada;
-    Thread thread;
 
-    public GameScreen(Batch prevBatch, Viewport prevViewport, String dificultad) {
+    /**
+     * Clase que gestiona el juego en si.
+     * @param prevBatch
+     * @param prevViewport
+     * @param dificultad
+     * @param music
+     */
+    public GameScreen(Batch prevBatch, Viewport prevViewport, String dificultad, boolean music) {
 
-        // Iniciem la música
-        AssetManager.music.play();
+        /**
+         * Para la configuracion del juego, tanto para quitar/poner la musica, como para establecer
+         * la dificultad. Dependiendo de la dificultad escogida, modifica la velocidad de la nave
+         * y el Gap de los asteroides, para que aparezcan mas, modificando el espacio entre ellos.
+         */
+        if (music) {
+            //Iniciem la música
+            AssetManager.music.play();
+        } else {
+            AssetManager.music.stop();
+        }
 
         if (dificultad.equals("facil")) {
             Settings.ASTEROID_GAP += 30;
@@ -78,84 +90,37 @@ public class GameScreen implements Screen {
         // Creem la nau i la resta d'objectes
         spacecraft = new Spacecraft(Settings.SPACECRAFT_STARTX, Settings.SPACECRAFT_STARTY, Settings.SPACECRAFT_WIDTH, Settings.SPACECRAFT_HEIGHT, stage, scrollHandler);
 
-
         // Afegim els actors a l'stage
         stage.addActor(scrollHandler);
         stage.addActor(spacecraft);
 
-        //stage.addActor(bullet);
         // Donem nom a l'Actor
         spacecraft.setName("spacecraft");
 
         // Iniciem el GlyphLayout
         textLayout = new GlyphLayout();
-        textFacil = new GlyphLayout();
-        textMig = new GlyphLayout();
-        textDificil = new GlyphLayout();
         textPuntuacio = new GlyphLayout();
-        //textLayout.setText(AssetManager.font, "Estas\n preparat?");
-
         currentState = GameState.READY;
-
-        // Assignem com a gestor d'entrada la classe InputHandler
+        //Assignem com a gestor d'entrada la classe InputHandler
         Gdx.input.setInputProcessor(new InputHandler(this));
-
-
     }
 
-    private void drawElements() {
-
-        // Recollim les propietats del Batch de l'Stage
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-        // Pintem el fons de negre per evitar el "flickering"
-        //Gdx.gl20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        //Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Inicialitzem el shaperenderer
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        // Definim el color (verd)
-        shapeRenderer.setColor(new Color(0, 1, 0, 1));
-
-        // Pintem la nau
-        shapeRenderer.rect(spacecraft.getX(), spacecraft.getY(), spacecraft.getWidth(), spacecraft.getHeight());
-
-        // Recollim tots els Asteroid
-        ArrayList<Asteroid> asteroids = scrollHandler.getAsteroids();
-        Asteroid asteroid;
-
-        for (int i = 0; i < asteroids.size(); i++) {
-
-            asteroid = asteroids.get(i);
-            switch (i) {
-                case 0:
-                    shapeRenderer.setColor(1, 0, 0, 1);
-                    break;
-                case 1:
-                    shapeRenderer.setColor(0, 0, 1, 1);
-                    break;
-                case 2:
-                    shapeRenderer.setColor(1, 1, 0, 1);
-                    break;
-                default:
-                    shapeRenderer.setColor(1, 1, 1, 1);
-                    break;
-            }
-            shapeRenderer.circle(asteroid.getX() + asteroid.getWidth() / 2, asteroid.getY() + asteroid.getWidth() / 2, asteroid.getWidth() / 2);
-        }
-        shapeRenderer.end();
+    /**
+     * Metodo que devuelve un booleano si coincide el parametro con "no". Lo usaremos para quitar
+     * la musica del juego o dejarla sonando.
+     * @param volum
+     * @return
+     */
+    public boolean isPlayMusic(String volum) {
+        return volum.equals("no");
     }
-
 
     @Override
     public void show() {
-
     }
 
     @Override
     public void render(float delta) {
-
         // Dibuixem tots els actors de l'stage
         stage.draw();
 
@@ -170,47 +135,46 @@ public class GameScreen implements Screen {
                 break;
             case READY:
                 if (contador == 0) {
-                    updateReady(true, false);
+                    updateReady(true);
                     contador = 1;
                 } else {
-                    updateReady(false, true);
+                    updateReady(false);
                 }
                 break;
         }
-        //drawElements();
     }
 
-    private void updateReady(boolean primeraVegada, boolean mostrar) {
+    /**
+     * Pantalla intermedia entre la dificultad y el juego para que no inicie directamente cuando
+     * pulsamos la dificultad que queremos.
+     * @param primeraVegada
+     */
+    private void updateReady(boolean primeraVegada) {
         // Dibuixem el text al centre de la pantalla
         batch.begin();
         if (!primeraVegada) {
             AssetManager.font.draw(batch, textLayout, (Settings.GAME_WIDTH / 2) - textLayout.width / 2, (Settings.GAME_HEIGHT / 2) - textLayout.height / 2);
-            //AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH / 2) - textDificil.width / 2, (Settings.GAME_HEIGHT / 2) - textMig.height / 2);
         } else {
-            if (mostrar) {
-                AssetManager.font.draw(batch, textLayout, Settings.GAME_WIDTH / 2 - textLayout.width / 2, Settings.GAME_HEIGHT / 2 - textLayout.height / 2);
-                textLayout.setText(AssetManager.font, "Torna a intentar-ho");
-            } else {
-                AssetManager.font.draw(batch, textLayout, Settings.GAME_WIDTH / 2 - textLayout.width / 2, Settings.GAME_HEIGHT / 2 - textLayout.height / 2);
-                textLayout.setText(AssetManager.font, "Som-hi!");
-            }
+            AssetManager.font.draw(batch, textLayout, Settings.GAME_WIDTH / 2 - textLayout.width / 2, Settings.GAME_HEIGHT / 2 - textLayout.height / 2);
+            textLayout.setText(AssetManager.font, "Som-hi!");
         }
-        //stage.addActor(textLbl);
         batch.end();
     }
 
-
+    /**
+     * Método que se ejecuta todoe el rato al estar en "render" que actualiza la puntuacion en todom omento
+     * y que si la nave colisiona, actualiza el estado del juego y muestra en la pantalla un resumen de
+     * como ha ido la partida.
+     * @param delta
+     */
     private void updateRunning(float delta) {
         stage.act(delta);
         batch.begin();
         boolean colisio = false;
         if (!colisio) {
-            textPuntuacio.setText(AssetManager.font, "Puntuacio: " + scrollHandler.getPuntuacio());
+            textPuntuacio.setText(AssetManager.font, "Puntuacio: " + ((scrollHandler.getPuntuacio()+scrollHandler.getPuntuacioPerDestruccio())-scrollHandler.getPuntuacioPerDestruccio()));
             AssetManager.font.getData().setScale(0.3f);
-            AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 100), 2);
-            /*if (scrollHandler.getPuntuacio()>100){
-                AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 110), 2);
-            }*/
+            AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 110), 2);
         }
 
         if (scrollHandler.collides(spacecraft)) {
@@ -222,57 +186,57 @@ public class GameScreen implements Screen {
             colisio = true;
         }
 
-        //if (scrollHandler.co)
-        if (recordActual < scrollHandler.getPuntuacio()) {
-            recordActual = scrollHandler.getPuntuacio();
+        if (recordActual < (scrollHandler.getPuntuacio() + scrollHandler.getPuntuacioPerDestruccio())) {
+            recordActual = ((scrollHandler.getPuntuacio() + scrollHandler.getPuntuacioPerDestruccio()) - scrollHandler.getPuntuacioPerDestruccio());
             //AssetManager.recordSound.play();
         }
         if (colisio) {
-            AssetManager.font.getData().setScale(0.4f);
+            AssetManager.font.getData().setScale(0.3f);
             if (scrollHandler.getPuntuacio() > 0) {
-                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + scrollHandler.getPuntuacio() + " punts\n");
+                AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH / 2), 50);
+                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + (scrollHandler.getPuntuacio() - scrollHandler.getPuntuacioPerDestruccio()) + " punts\n" +
+                        "Asteroides destruits: " + scrollHandler.getPuntuacioPerDestruccio() + " punts\n\nTotal: " +
+                        ((scrollHandler.getPuntuacioPerDestruccio() + scrollHandler.getPuntuacio()) - scrollHandler.getPuntuacioPerDestruccio()) + " punts");
             } else {
-                textLayout.setText(AssetManager.font, "Record: " + recordActual + "\n\nPuntuacio: \n" + 0 + " punts JAJA");
+                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts\n\nPuntuacio: \n" + 0 + " punts JAJA");
             }
         }
         batch.end();
     }
 
+    /**
+     * Método que se ejecuta cuando mueres.
+     * @param delta
+     */
     private void updateGameOver(float delta) {
         stage.act(delta);
-
         batch.begin();
         AssetManager.font.draw(batch, textLayout, (Settings.GAME_WIDTH - textLayout.width) / 2, (Settings.GAME_HEIGHT - textLayout.height) / 2);
-        // Si hi ha hagut col·lisió: Reproduïm l'explosió i posem l'estat a GameOver
+        // Si hi ha hagut col·lisió: Reproduïm l'explosió
         batch.draw(AssetManager.explosionAnim.getKeyFrame(explosionTime, false), (spacecraft.getX() + spacecraft.getWidth() / 2) - 32, spacecraft.getY() + spacecraft.getHeight() / 2 - 32, 64, 64);
         batch.end();
-
         explosionTime += delta;
     }
 
+    /**
+     * Para resetear el juego.
+     */
     public void reset() {
-
         // Cridem als restart dels elements.
         spacecraft.reset();
         scrollHandler.reset();
-
-        thread = new Thread();
-
-
         // Posem l'estat a 'Ready'
         currentState = GameState.READY;
-
         //Tornem a possar la mida normal
         AssetManager.font.getData().setScale(0.4f);
-
         // Afegim la nau a l'stage
         stage.addActor(spacecraft);
         vegada = true;
-
         // Posem a 0 les variables per controlar el temps jugat i l'animació de l'explosió
         explosionTime = 0.0f;
-
+        //Reestablecemos a 0 la puntuacion
         scrollHandler.setPuntuacio(true, 0);
+        scrollHandler.setPuntuacioPerDestruccio(true, 0);
     }
 
 

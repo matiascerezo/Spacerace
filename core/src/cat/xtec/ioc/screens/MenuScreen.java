@@ -31,16 +31,24 @@ public class MenuScreen implements Screen {
     private Label.LabelStyle textStyle;
     private Label textLbl;
     private int dificil, facil, mig;
-    private int velocitatEntreAsteroids;
     private TextButton botonFacil, botonDificil, botonMedio;
     private Batch batch;
+    boolean music;
 
     private TextButton.TextButtonStyle textButtonStyle;
 
-    public MenuScreen(Batch prevBatch, Viewport prevViewport, SpaceRace game) {
+    /**
+     * Clase que gestiona la pantalla de la dificultad del juego.
+     * @param prevBatch
+     * @param prevViewport
+     * @param game
+     * @param music
+     */
+    public MenuScreen(Batch prevBatch, Viewport prevViewport, SpaceRace game, final boolean music) {
 
         stage = new Stage(prevViewport, prevBatch);
         batch = stage.getBatch();
+        this.music = music;
 
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = AssetManager.font;
@@ -91,26 +99,25 @@ public class MenuScreen implements Screen {
         containerMig.center();
         containerMig.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 7);
 
+        //Añadimos al stage los contenedores.
         stage.addActor(containerFacil);
         stage.addActor(containerDificil);
         stage.addActor(containerDif);
         stage.addActor(containerMig);
 
-        // Afegim les accions de escalar: primer es fa gran i després torna a l'estat original ininterrompudament
 
-        //stage.addActor(container);
-
+        //Añadimos los listeners de los botones.
         botonFacil.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "facil"));
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "facil", music));
                 dispose();
             }
         });
         botonMedio.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "mig"));
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "mig", music));
                 dispose();
             }
         });
@@ -118,7 +125,7 @@ public class MenuScreen implements Screen {
         botonDificil.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "dificil"));
+                MenuScreen.this.game.setScreen(new GameScreen(MenuScreen.this.stage.getBatch(), MenuScreen.this.stage.getViewport(), "dificil", music));
                 dispose();
             }
         });
@@ -130,161 +137,35 @@ public class MenuScreen implements Screen {
         spacecraft.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.sequence(Actions.moveTo(0 - spacecraft.getWidth(), y), Actions.moveTo(Settings.GAME_WIDTH, y, 5))));
 
         stage.addActor(spacecraft);
-
-
     }
 
     @Override
     public void show() {
-
     }
 
     @Override
     public void render(float delta) {
-
         stage.draw();
         stage.act(delta);
-
-        // Si es fa clic en la pantalla, canviem la pantalla
-        /*if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
-            dispose();
-        }*/
-        //if (Gdx.input.)
-
-
     }
-
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
-    }
-
-    public int getDificil() {
-        return dificil;
-    }
-
-    public void setDificil(int dificil) {
-        this.dificil = dificil;
-    }
-
-    public int getFacil() {
-        return facil;
-    }
-
-    public void setFacil(int facil) {
-        this.facil = facil;
-    }
-
-    public int getMig() {
-        return mig;
-    }
-
-    public void setMig(int mig) {
-        this.mig = mig;
-        setVelocitatEntreAsteroids(30);
-    }
-
-    public int getVelocitatEntreAsteroids() {
-        return velocitatEntreAsteroids;
-    }
-
-    public void setVelocitatEntreAsteroids(int velocitatEntreAsteroids) {
-        this.velocitatEntreAsteroids = velocitatEntreAsteroids;
     }
 }
-/*private Image playBtn, creditsBtn, optionsBtn;
-private Stage stage;
-private boolean playTouch, optionsTouch, creditsTouch;
-private OrthographicCamera cam;
-private Viewport viewport;
-private MainClass game;
-LoadingScreen loading;
-
-
-public MenuScreen(MainClass game) {
-
-    this.game = game;
-    cam = new OrthographicCamera();
-    viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), cam);
-
-}
-
-
-@Override
-public void show() {
-    Table table = new Table();
-    table.center();
-    table.setFillParent(true);
-
-    playBtn = new Image(new Texture("buttons/playBtn.png"));
-    creditsBtn = new Image(new Texture("buttons/CreditsBtn.png"));
-    optionsBtn = new Image(new Texture("buttons/optionsBtn.png"));
-
-    stage = new Stage();
-
-    playBtn.setSize(playBtn.getImageWidth()*2, playBtn.getImageHeight()*2);
-    creditsBtn.setSize(creditsBtn.getImageWidth()*2, creditsBtn.getImageHeight()*2);
-    optionsBtn.setSize(optionsBtn.getImageWidth()*2, optionsBtn.getImageHeight()*2);
-
-
-    Gdx.input.setInputProcessor(stage);
-
-    playBtn.addListener(new InputListener() {
-
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new LoadingScreen(game));
-            playTouch = true;
-            return true;
-        }
-    });
-
-    optionsBtn.addListener(new InputListener() {
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            optionsTouch = true;
-            return true;
-        }
-    });
-
-    creditsBtn.addListener(new InputListener() {
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-            ((Game)Gdx.app.getApplicationListener()).setScreen(new  CreditsScreen(game));
-            creditsTouch = true;
-            return true;
-        }
-    });
-
-
-    table.add(playBtn).expandX().padTop(playBtn.getHeight()/4);
-    table.row();
-    table.add(optionsBtn).expandX().padTop(optionsBtn.getHeight()/4);
-    table.row();
-    table.add(creditsBtn).expandX().padTop(creditsBtn.getHeight()/4);
-    table.pack();
-
-    stage.addActor(table);*/

@@ -29,13 +29,11 @@ public class AssetManager {
     //public static Animation bulletAnim;
 
     // Sons
-    public static Sound explosionSound, recordSound, shootSound, shootSound1;
+    public static Sound explosionSound, explosion1Sound, recordSound, shootSound, shootSound1;
     public static Music music;
-
 
     // Font
     public static BitmapFont font;
-
 
     public static void load() {
         // Carreguem les textures i li apliquem el mètode d'escalat 'nearest'
@@ -85,18 +83,13 @@ public class AssetManager {
         background.flip(false, true);
 
         //Bala
-        //bullet = new TextureRegion(sheet, 0, 0, 32, 16);
-        //bullet = new TextureRegion(sheet, 512, 296, 32, 17);
         bullet = new TextureRegion(sheet, 527, 304, 17, 8);
         bullet.flip(false, true);
-
-        //bulletAnim = new Animation(0.05F, bullet);
-        //bulletAnim.setPlayMode(Animation.PlayMode.NORMAL);
-
 
         /******************************* Sounds *************************************/
         // Explosió
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        explosion1Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion1.wav"));
 
         //Musica record
         recordSound = Gdx.audio.newSound((Gdx.files.internal("sounds/record.wav")));
@@ -104,7 +97,6 @@ public class AssetManager {
         //Sonido disparo
         shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot.wav"));
         shootSound1 = Gdx.audio.newSound(Gdx.files.internal("sounds/shoot1.wav"));
-
 
         // Música del joc
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/Afterburner.ogg"));
@@ -119,12 +111,10 @@ public class AssetManager {
     }
 
     public static void dispose() {
-
         // Descrtem els recursos
         sheet.dispose();
         explosionSound.dispose();
         music.dispose();
         recordSound.dispose();
-
     }
 }

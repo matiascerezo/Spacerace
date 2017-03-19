@@ -14,14 +14,13 @@ public class ScrollHandler extends Group {
     Background bg, bg_back;
 
     // Asteroides
-    int numAsteroids, puntuacio;
+    int numAsteroids, puntuacio, puntuacioPerDestruccio;
     private ArrayList<Asteroid> asteroids;
 
     // Objecte Random
     Random r;
 
     public ScrollHandler() {
-
         // Creem els dos fons
         bg = new Background(0, 0, Settings.GAME_WIDTH * 2, Settings.GAME_HEIGHT, Settings.BG_SPEED);
         bg_back = new Background(bg.getTailX(), 0, Settings.GAME_WIDTH * 2, Settings.GAME_HEIGHT, Settings.BG_SPEED);
@@ -58,7 +57,6 @@ public class ScrollHandler extends Group {
             // Afegim l'asteroide al grup d'actors
             addActor(asteroid);
         }
-
     }
 
     @Override
@@ -67,10 +65,8 @@ public class ScrollHandler extends Group {
         // Si algun element està fora de la pantalla, fem un reset de l'element.
         if (bg.isLeftOfScreen()) {
             bg.reset(bg_back.getTailX());
-
         } else if (bg_back.isLeftOfScreen()) {
             bg_back.reset(bg.getTailX());
-
         }
 
         for (int i = 0; i < asteroids.size(); i++) {
@@ -78,21 +74,30 @@ public class ScrollHandler extends Group {
             if (asteroid.isLeftOfScreen()) {
                 if (i == 0) {
                     asteroid.reset(asteroids.get(asteroids.size() - 1).getTailX() + Settings.ASTEROID_GAP);
-
                 } else {
                     asteroid.reset(asteroids.get(i - 1).getTailX() + Settings.ASTEROID_GAP);
-
                 }
+                //Cuando un asteroide sobrepasa la pantalla se incrementa en +10 los puntos.
                 //Puntuacio
                 setPuntuacio(false, 10);
             }
         }
     }
 
+    /**
+     * Para obtener la puntuacion
+     * @return
+     */
     public int getPuntuacio() {
         return puntuacio;
     }
 
+    /**
+     * Para hacer el set de puntuacion, si el boolean esta en true, se pone a 0. Esto se usara para
+     * que cada vez que la nave explota se reinicie a 0 la puntuacion.
+     * @param reiniciar
+     * @param puntuacio
+     */
     public void setPuntuacio(boolean reiniciar, int puntuacio) {
         if (reiniciar) {
             this.puntuacio = puntuacio;
@@ -101,8 +106,34 @@ public class ScrollHandler extends Group {
         }
     }
 
-    public boolean collides(Spacecraft nau) {
+    /**
+     * Igual que el metodo de "setPuntuacio()" pero con otra puntuacion distinta, que se incrementara
+     * en +10 cuando la bala impacta con un asteroide. Se reiniciara a 0 cuando el boolean sea true.
+     * @param reiniciar
+     * @param puntuacioPerDestruccio
+     */
+    public void setPuntuacioPerDestruccio(boolean reiniciar, int puntuacioPerDestruccio) {
+        if (reiniciar) {
+            this.puntuacioPerDestruccio = puntuacioPerDestruccio;
+        } else {
+            this.puntuacioPerDestruccio += puntuacioPerDestruccio;
+        }
+    }
 
+    /**
+     * Para obtener la puntuacion que hagamos al destruir los asteroides.
+     * @return
+     */
+    public int getPuntuacioPerDestruccio() {
+        return puntuacioPerDestruccio;
+    }
+
+    /**
+     * Método para comprobar que la nave choca con el asteroide.
+     * @param nau
+     * @return
+     */
+    public boolean collides(Spacecraft nau) {
         // Comprovem les col·lisions entre cada asteroid i la nau
         for (Asteroid asteroid : asteroids) {
             if (asteroid.collides(nau)) {
@@ -112,18 +143,22 @@ public class ScrollHandler extends Group {
         return false;
     }
 
+    /**
+     * Para resetear to-do desde el principio
+     */
     public void reset() {
-
         // Posem el primer asteroid fora de la pantalla per la dreta
         asteroids.get(0).reset(Settings.GAME_WIDTH);
         // Calculem les noves posicions de la resta d'asteroids.
         for (int i = 1; i < asteroids.size(); i++) {
-
             asteroids.get(i).reset(asteroids.get(i - 1).getTailX() + Settings.ASTEROID_GAP);
-
         }
     }
 
+    /**
+     * Para obtener los asteroides.
+     * @return
+     */
     public ArrayList<Asteroid> getAsteroids() {
         return asteroids;
     }

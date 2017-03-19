@@ -19,7 +19,9 @@ import cat.xtec.ioc.SpaceRace;
 import cat.xtec.ioc.helpers.AssetManager;
 import cat.xtec.ioc.utils.Settings;
 
-
+/**
+ * Clase que gestiona la pantalla inicial
+ */
 public class SplashScreen implements Screen {
 
     private Stage stage;
@@ -27,7 +29,7 @@ public class SplashScreen implements Screen {
 
     private Label.LabelStyle textStyle;
     private Label textLbl;
-    private TextButton botonJugar;
+    private TextButton botonJugar, botonOpciones;
     private TextButton.TextButtonStyle textButtonStyle;
     private Batch batch;
 
@@ -56,7 +58,9 @@ public class SplashScreen implements Screen {
         textButtonStyle.font = AssetManager.font;
         textLbl = new Label("SpaceRace", textStyle);
 
+        //Cremos los botones con su correspondiente texto.
         botonJugar = new TextButton("Jugar", textButtonStyle);
+        botonOpciones = new TextButton("Opciones", textButtonStyle);
 
         // Creem el contenidor necessari per aplicar-li les accions
         Container container = new Container(textLbl);
@@ -69,10 +73,17 @@ public class SplashScreen implements Screen {
         containerJugar.center();
         containerJugar.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 30);
 
+        Container containerOpcions = new Container(botonOpciones);
+        containerOpcions.setTransform(true);
+        containerOpcions.center();
+        containerOpcions.setPosition(Settings.GAME_WIDTH / 2, Settings.GAME_HEIGHT / 2 + 50);
+
         // Afegim les accions de escalar: primer es fa gran i després torna a l'estat original ininterrompudament
         container.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.sequence(Actions.scaleTo(1.5f, 1.5f, 1), Actions.scaleTo(1, 1, 1))));
+        //Añadimos los contenedores al Stage.
         stage.addActor(container);
         stage.addActor(containerJugar);
+        stage.addActor(containerOpcions);
 
         // Creem la imatge de la nau i li assignem el moviment en horitzontal
         Image spacecraft = new Image(AssetManager.spacecraft);
@@ -80,8 +91,6 @@ public class SplashScreen implements Screen {
         spacecraft.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.sequence(Actions.moveTo(0 - spacecraft.getWidth(), y), Actions.moveTo(Settings.GAME_WIDTH, y, 5))));
 
         stage.addActor(spacecraft);
-
-
     }
 
     @Override
@@ -95,46 +104,46 @@ public class SplashScreen implements Screen {
         stage.draw();
         stage.act(delta);
 
-        // Si es fa clic en la pantalla, canviem la pantalla
-
-
-       botonJugar.addListener(new ChangeListener() {
-                                  @Override
-                                  public void changed(ChangeEvent event, Actor actor) {
-                                      game.setScreen(new MenuScreen(stage.getBatch(), stage.getViewport(),game));
-                                      dispose();
-                                  }
-                              });
+        //Si se hace click en este TextButton, pasará a la dificultad del juego.
+        botonJugar.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new MenuScreen(stage.getBatch(), stage.getViewport(), game, true));
+                dispose();
+            }
+        });
+        //Si se hace click en este TextButton, pasará a otra pantalla donde podremos quitar el volumen o no.
+        botonOpciones.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new OptionsScreen(stage.getBatch(), stage.getViewport(), game));
+            }
+        });
         Gdx.input.setInputProcessor(stage);
-        /*if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(stage.getBatch(), stage.getViewport()));
-            dispose();
-        }*/
+    }
+
+    @Override
+    public void resize(int width, int height) {
 
     }
 
-        @Override
-        public void resize ( int width, int height){
+    @Override
+    public void pause() {
 
-        }
-
-        @Override
-        public void pause () {
-
-        }
-
-        @Override
-        public void resume () {
-
-        }
-
-        @Override
-        public void hide () {
-
-        }
-
-        @Override
-        public void dispose () {
-
-        }
     }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+}
