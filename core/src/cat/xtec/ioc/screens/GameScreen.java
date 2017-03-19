@@ -56,6 +56,7 @@ public class GameScreen implements Screen {
 
     /**
      * Clase que gestiona el juego en si.
+     *
      * @param prevBatch
      * @param prevViewport
      * @param dificultad
@@ -111,6 +112,7 @@ public class GameScreen implements Screen {
     /**
      * Metodo que devuelve un booleano si coincide el parametro con "no". Lo usaremos para quitar
      * la musica del juego o dejarla sonando.
+     *
      * @param volum
      * @return
      */
@@ -150,6 +152,7 @@ public class GameScreen implements Screen {
     /**
      * Pantalla intermedia entre la dificultad y el juego para que no inicie directamente cuando
      * pulsamos la dificultad que queremos.
+     *
      * @param primeraVegada
      */
     private void updateReady(boolean primeraVegada) {
@@ -168,6 +171,7 @@ public class GameScreen implements Screen {
      * Método que se ejecuta todoe el rato al estar en "render" que actualiza la puntuacion en todom omento
      * y que si la nave colisiona, actualiza el estado del juego y muestra en la pantalla un resumen de
      * como ha ido la partida.
+     *
      * @param delta
      */
     private void updateRunning(float delta) {
@@ -175,7 +179,7 @@ public class GameScreen implements Screen {
         batch.begin();
         boolean colisio = false;
         if (!colisio) {
-            textPuntuacio.setText(AssetManager.font, "Puntuacio: " + ((scrollHandler.getPuntuacio()+scrollHandler.getPuntuacioPerDestruccio())-scrollHandler.getPuntuacioPerDestruccio()));
+            textPuntuacio.setText(AssetManager.font, "Puntuacio: " + ((scrollHandler.getPuntuacio() + scrollHandler.getPuntuacioPerDestruccio()) - scrollHandler.getPuntuacioPerDestruccio()));
             AssetManager.font.getData().setScale(0.3f);
             AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH - 110), 2);
         }
@@ -197,7 +201,11 @@ public class GameScreen implements Screen {
             AssetManager.font.getData().setScale(0.3f);
             if (scrollHandler.getPuntuacio() > 0) {
                 AssetManager.font.draw(batch, textPuntuacio, (Settings.GAME_WIDTH / 2), 50);
-                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + (scrollHandler.getPuntuacio() - scrollHandler.getPuntuacioPerDestruccio()) + " punts\n" +
+                int puntuacio = (scrollHandler.getPuntuacio() - scrollHandler.getPuntuacioPerDestruccio());
+                if (puntuacio < 0) {
+                    puntuacio = 0;
+                }
+                textLayout.setText(AssetManager.font, "Record: " + recordActual + " punts" + "\n\nPuntuacio: " + puntuacio + " punts\n" +
                         "Asteroides destruits: " + scrollHandler.getPuntuacioPerDestruccio() + " punts\n\nTotal: " +
                         ((scrollHandler.getPuntuacioPerDestruccio() + scrollHandler.getPuntuacio()) - scrollHandler.getPuntuacioPerDestruccio()) + " punts");
             } else {
@@ -209,6 +217,7 @@ public class GameScreen implements Screen {
 
     /**
      * Método que se ejecuta cuando mueres.
+     *
      * @param delta
      */
     private void updateGameOver(float delta) {
