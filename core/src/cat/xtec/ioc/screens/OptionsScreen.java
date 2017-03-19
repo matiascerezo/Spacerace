@@ -50,6 +50,7 @@ public class OptionsScreen implements Screen {
         textButtonStyle.font = AssetManager.font;
 
         this.game = game;
+        gameScreen = new GameScreen();
 
         // Creem la càmera de les dimensions del joc
         OrthographicCamera camera = new OrthographicCamera(Settings.GAME_WIDTH, Settings.GAME_HEIGHT);
@@ -71,8 +72,8 @@ public class OptionsScreen implements Screen {
         textLbl = new Label("Opcions", textStyle);
 
         //Establim el text que anirá en els botons.
-        botonQuitarVolumen = new TextButton("Treure Volum", textButtonStyle);
-        botonPonerVolumen = new TextButton("Possar volum", textButtonStyle);
+        botonQuitarVolumen = new TextButton("Treure música", textButtonStyle);
+        botonPonerVolumen = new TextButton("Possar música", textButtonStyle);
 
         // Creem el contenidor necessari per aplicar-li les accions
         Container containerPonerVolum = new Container(botonPonerVolumen);

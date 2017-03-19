@@ -51,6 +51,9 @@ public class GameScreen implements Screen {
 
     boolean vegada;
 
+    public GameScreen() {
+    }
+
     /**
      * Clase que gestiona el juego en si.
      * @param prevBatch
